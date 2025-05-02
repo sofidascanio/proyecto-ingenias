@@ -48,9 +48,6 @@ app.get('/titulo/:title', (req, res) => {
 // ruta /categoria/:cat
 // listar todas las peliculas que coinciden con la categoria "cat"
 app.get('/categoria/:cat', (req, res) => {
-    //const categoria = req.params.cat.toLowerCase();
-    //const peliculas = TRAILERFLIX.filter(pelicula => pelicula.categoria === categoria);
-
     const parametros= normParam(req.params.cat);
     const resultados = TRAILERFLIX.filter(pelicula =>{return normParam(pelicula.categoria).includes(parametros)});
 
@@ -66,11 +63,6 @@ app.get('/categoria/:cat', (req, res) => {
 // busqueda parcial, lista las peliculas de actor/actriz 
 app.get('/reparto/:act', (req, res) => {
     // lo mismo que /titulo/:title pero aplicar un map para devolver solo "reparto" y "titulo"
-    // const parametros= normParam(req.params.act);
-    // const resultados = TRAILERFLIX.filter(pelicula =>{return normParam(pelicula.titulo).includes(parametros)});
-
-    // const resultadosReducidos = resultados.map();
-
     const parametros = normParam(req.params.act);
     const resultados = TRAILERFLIX.filter( pelicula =>{return normParam(pelicula.reparto).includes(parametros)});
     const repartoSeleccionado = resultados.map(pelicula => { return { reparto: pelicula.reparto, titulo:pelicula.titulo }})
