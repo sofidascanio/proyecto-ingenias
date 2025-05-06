@@ -1,20 +1,13 @@
-// pre-entrega
 const fs = require('fs');
 const removeAccents = require('remove-accents');
 const express = require('express');
 const app = express();
-//const PORT = 3008;
-
 const dotenv = require('dotenv');
-    dotenv.config();
-
+   dotenv.config();
 const PORT = process.env.PORT || 3008
+const FILE_PATH = process.env.FILE_PATH
 
-// archivo json
-// falta "agarrar" la ruta del .env
-// agregar algun manejo de errores aca?
-const TRAILERFLIX = JSON.parse(fs.readFileSync('./database/trailerflix.json', 'utf-8'));
-
+const TRAILERFLIX = JSON.parse(fs.readFileSync(FILE_PATH, 'utf-8'));
 
 function normParam(parametro){
     let para = removeAccents(parametro.trim().toLowerCase());
@@ -26,14 +19,11 @@ app.get('/', (req, res) => {
 });
 
 // ruta /catalogo
-// listar todo el contenido de trailerﬂix JSON
 app.get('/catalogo', (req, res) => {
-    // agregar limite?
     res.json(TRAILERFLIX);
 });
 
 // ruta /titulo/:title
-// busqueda parcial de titulo de pelicula
 app.get('/titulo/:title', (req, res) => {
     const parametros= normParam(req.params.title);
     const resultados = TRAILERFLIX.filter(pelicula =>{return normParam(pelicula.titulo).includes(parametros)});
@@ -46,7 +36,6 @@ app.get('/titulo/:title', (req, res) => {
 });
   
 // ruta /categoria/:cat
-// listar todas las peliculas que coinciden con la categoria "cat"
 app.get('/categoria/:cat', (req, res) => {
     const parametros= normParam(req.params.cat);
     const resultados = TRAILERFLIX.filter(pelicula =>{return normParam(pelicula.categoria).includes(parametros)});
@@ -60,9 +49,7 @@ app.get('/categoria/:cat', (req, res) => {
 
 
 // ruta /reparto/:act
-// busqueda parcial, lista las peliculas de actor/actriz 
 app.get('/reparto/:act', (req, res) => {
-    // lo mismo que /titulo/:title pero aplicar un map para devolver solo "reparto" y "titulo"
     const parametros = normParam(req.params.act);
     const resultados = TRAILERFLIX.filter( pelicula =>{return normParam(pelicula.reparto).includes(parametros)});
     const repartoSeleccionado = resultados.map(pelicula => { return { reparto: pelicula.reparto, titulo:pelicula.titulo }})
@@ -75,14 +62,9 @@ app.get('/reparto/:act', (req, res) => {
 });
 
 // ruta /trailer/:id
-// retorna la URL del trailer de la película o serie.
-// Manejar error por si no esta el trailer
 app.get('/trailer/:id', (req, res) => {
-    // buscar trailer por id
-    // mostrar mensaje de error si no existe
     const id = parseInt(req.params.id);
     
-    // typeof: para saber si es un numero
     if (typeof id !== 'number') {
       return res.status(400).send("ID inválido");
     }
@@ -98,7 +80,6 @@ app.get('/trailer/:id', (req, res) => {
 
     res.json(peliculaElegida)
 });
-
 
 // manejo de error por ruta invalida
 app.use((req, res) => {
