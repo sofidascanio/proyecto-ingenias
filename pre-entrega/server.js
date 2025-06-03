@@ -47,7 +47,7 @@ app.get('/categoria/:cat', (req, res) => {
     const parametros= normParam(req.params.cat);
     const resultados = TRAILERFLIX.filter(pelicula =>{return normParam(pelicula.categoria).includes(parametros)});
 
-    if (parametros != "serie" || "pelicula") {
+    if (parametros !== "serie" && parametros !== "pelicula") {
       return res.json({mensaje: "No se encontraron categorias con ese nombre"});
     }
  
@@ -89,7 +89,7 @@ app.get('/trailer/:id', (req, res) => {
       data = {
         id: resultado.id, 
         titulo: resultado.titulo, 
-        trailer: resultado?.trailer || '',
+        trailer: resultado?.trailer || 'No existe trailer para esta serie/pelicula',
       };
     };
 

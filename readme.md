@@ -9,6 +9,7 @@ Pre-entrega
 
 Para Iniciar Servidor
 
+* ` cd pre-entrega `
 * ` npm start `
 
 Instalar Dependencias 
